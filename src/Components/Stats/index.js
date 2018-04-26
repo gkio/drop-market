@@ -49,12 +49,28 @@ const RowWr = styled.div`
 
 export default class Stats extends Component {
 
+  state = {
+    loading: false
+  }
+
   getLineRange = (maxValue, value) => {
     return parseFloat(100 / maxValue * value).toFixed(2)
   }
 
+  fetchNewData = () => {
+    const {loading} = this.state;
+    if(!loading) {
+      this.setState(
+        ({loading}) => ({loading: !loading}),
+        () => this.props.fetchData(),
+        ({loading}) => ({loading: !loading}),
+      );
+    }
+  }
+
   render () {
     const {visible, asks, bids, maxRange : {btcMaxAsks, btcMaxBids}} = this.props;
+    const {loading} = this.state;
     return (
       <Wr visible={visible}>
         <Header>
@@ -73,7 +89,9 @@ export default class Stats extends Component {
             <Label noMargin> price </Label>
           </Wrapper>
         </Header>
-        <StatsWr>
+        <StatsWr
+          onScroll={this.fetchNewData}
+        >
           <RowWr>
             {asks && asks.map((ask,index) => (
               <Row

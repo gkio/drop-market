@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import Drag from '../Drag';
 import image from './images/arrow.png';
 import Stats from '../Stats';
@@ -33,6 +33,8 @@ const Title = styled.span`
 const ArrowIcon = styled.img`
   width: 20px;
   height: 20px;
+  transition: all .17s linear;  
+  transform: rotate(${props => props.visible ? 0 : 180}deg);
   
   &:hover{
     cursor:pointer;
@@ -52,15 +54,15 @@ export default class Drop extends Component {
 
   render() {
     const {visible} = this.state;
-    const {asks, bids, maxRange} = this.props;
+    const {asks, bids, maxRange, fetchData} = this.props;
     return (
       <Drag>
         <Block>
           <Header>
             <Title> Test Block </Title>
-            <ArrowIcon onClick={this.toggleStatsVisibility} src={image} />
+            <ArrowIcon visible={visible} onClick={this.toggleStatsVisibility} src={image} />
           </Header>
-          <Stats visible={visible} asks={asks} bids={bids} maxRange={maxRange}/>
+          <Stats visible={visible} asks={asks} bids={bids} maxRange={maxRange} fetchData={fetchData}/>
         </Block>
       </Drag>
     )

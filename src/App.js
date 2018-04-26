@@ -3,7 +3,7 @@ import styled, {injectGlobal} from 'styled-components';
 import Drop from './Components/Drop';
 
 
-const dataAPI = 'https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_ETH&depth=10';
+const dataAPI = 'https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_ETH&depth=';
 
 injectGlobal`
   *{
@@ -19,12 +19,16 @@ const Wrapper = styled.div``;
 
 class App extends Component {
 
-
   state = {
     btcValue : 0,
-    filteredData : {},
+    filteredData : {
+      asks: [],
+      bids: [],
+    },
     maxRange: [],
+    page: 0,
   }
+
 
   filterMarket = list => list.map((data) => this.getDataFromMarketData(data))
 
@@ -54,29 +58,42 @@ class App extends Component {
     this.setState({maxRange});
   }
 
-  componentDidMount() {
-    fetch(dataAPI)
+  fetchData = () => {
+    const {page, filteredData} = this.state;
+
+
+    fetch(dataAPI + (page + 10))
       .then(response => response.json())
       .then((data) => {
-        const asks = this.filterMarket(data.asks);
-        const bids = this.filterMarket(data.bids);
 
 
-        const filteredData = {asks,bids};
+
+      const asks = this.filterMarket(data.asks.splice(-1*10));
+      const bids = this.filterMarket(data.bids.splice(-1*10));
+
+        const tmpFilteredData = {
+          asks: [...filteredData.asks, ...asks],
+          bids: [...filteredData.bids, ...bids],
+        };
+
         this.setState(
-          () => ({filteredData}),
+          () => ({filteredData: tmpFilteredData}),
           () => this.getMaxRangeValue()
-          );
+        );
 
       })
+    this.setState(({page}) => ({page: page + 10}))
+  }
 
+  componentDidMount() {
+    this.fetchData();
   }
 
   render() {
     const {filteredData: {asks, bids}, maxRange} = this.state;
     return (
       <Wrapper>
-        <Drop asks={asks} bids={bids} maxRange={maxRange}/>
+        <Drop asks={asks} bids={bids} maxRange={maxRange} fetchData={this.fetchData}/>
       </Wrapper>
     );
   }
