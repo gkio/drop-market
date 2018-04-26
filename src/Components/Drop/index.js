@@ -7,7 +7,7 @@ import Stats from '../Stats';
 const Block = styled.div`
   background-color: #252d47;
   border-radius: 15px;
-  width: 480px;
+  max-width: 480px;
   overflow: hidden;
   box-shadow: 0 0 15px #333;
 `;
@@ -46,13 +46,13 @@ export default class Drop extends Component {
   }
 
   toggleStatsVisibility = () => {
-    console.log(this.state.visible)
     this.setState(({visible}) => ({visible: !visible}))
   }
 
 
   render() {
     const {visible} = this.state;
+    const {asks, bids, maxRange} = this.props;
     return (
       <Drag>
         <Block>
@@ -60,7 +60,7 @@ export default class Drop extends Component {
             <Title> Test Block </Title>
             <ArrowIcon onClick={this.toggleStatsVisibility} src={image} />
           </Header>
-          <Stats visible={visible}/>
+          <Stats visible={visible} asks={asks} bids={bids} maxRange={maxRange}/>
         </Block>
       </Drag>
     )

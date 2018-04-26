@@ -9,7 +9,6 @@ const Border = styled.div`
   };
 `
 
-
 const Wr = styled.div`
   height: 35px;
   line-height: 35px;
@@ -26,8 +25,8 @@ const Line = styled.div`
   position: absolute;
   top: -1px;
   ${({reversed}) => reversed 
-    ? css`left: -3%`
-    : css`right: -3%`
+    ? css`left: -5.5%`
+    : css`right: -5.5%`
   };
   background: ${({reversed}) => reversed ?  'linear-gradient(#295cff, #4f79ff);' : 'linear-gradient(#2fd840, #00ff1a);'};
   width: ${props => props.line}%;
@@ -47,30 +46,32 @@ const Label = styled.span`
 `
 
 const Sep = styled.div`
-  flex: 0 0 60%;
-  width: 60%;
+  flex: 0 0 55%;
+  width: 55%;
   display: flex;
+  ${({reversed}) => reversed
+  ? css`margin-left: 10px`
+  : css`margin-right: 10px`
+  };
   justify-content: space-between;
 `;
 
-
-
 export const Row = ({reverse = false, price, coin1, coin2, line}) => (
-  <Border reverse>
+  <Border reversed={reverse}>
     <Wr>
       {!reverse ? (
       <Fragment>
         <Label>{price}</Label>
         <Sep>
           <Label>{coin1}</Label>
-          <Label>{coin2}</Label>
+          <Label>{coin2.toFixed(2)}</Label>
         </Sep>
         <Line line={line}/>
       </Fragment>
       ) : (
       <Fragment>
-        <Sep>
-          <Label>{coin2}</Label>
+        <Sep reversed>
+          <Label>{coin2.toFixed(2)}</Label>
           <Label>{coin1}</Label>
         </Sep>
         <Label>{price}</Label>

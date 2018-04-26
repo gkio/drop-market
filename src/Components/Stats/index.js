@@ -7,6 +7,7 @@ const Wr = styled.div`
   padding: 0 30px;
   height: ${props => props.visible ? 250 : 0}px;
   transition: height .5s ease-in-out;
+  margin-bottom: 10px;
 `
 
 const Separator = styled.div``
@@ -38,6 +39,7 @@ const StatsWr = styled.div`
   display: flex;
   justify-content: space-between;
   overflow-y: scroll;
+  height: 85%;
 `;
 
 const RowWr = styled.div`
@@ -46,8 +48,13 @@ const RowWr = styled.div`
 `
 
 export default class Stats extends Component {
+
+  getLineRange = (maxValue, value) => {
+    return parseFloat(100 / maxValue * value).toFixed(2)
+  }
+
   render () {
-    const {visible} = this.props;
+    const {visible, asks, bids, maxRange : {btcMaxAsks, btcMaxBids}} = this.props;
     return (
       <Wr visible={visible}>
         <Header>
@@ -68,18 +75,25 @@ export default class Stats extends Component {
         </Header>
         <StatsWr>
           <RowWr>
-            <Row price={500} coin1={500} coin2={500} line={15} />
-            <Row price={500} coin1={500} coin2={500} line={18} />
-            <Row price={500} coin1={500} coin2={500} line={21} />
-            <Row price={500} coin1={500} coin2={500} line={26} />
-            <Row price={500} coin1={500} coin2={500} line={37} />
+            {asks && asks.map((ask,index) => (
+              <Row
+                key={index}
+                price={ask.price}
+                coin1={ask.altcoin}
+                coin2={ask.btcValue}
+                line={() => this.getLineRange(btcMaxAsks, ask.btcValue)} />
+            ))}
           </RowWr>
           <RowWr>
-            <Row price={500} coin1={500} coin2={500} line={15} reverse/>
-            <Row price={500} coin1={500} coin2={500} line={18} reverse/>
-            <Row price={500} coin1={500} coin2={500} line={21} reverse/>
-            <Row price={500} coin1={500} coin2={500} line={26} reverse/>
-            <Row price={500} coin1={500} coin2={500} line={37} reverse/>
+            {bids && bids.map((bids,index) => (
+              <Row
+                key={index}
+                price={bids.price}
+                coin1={bids.altcoin}
+                coin2={bids.btcValue}
+                line={() => this.getLineRange(btcMaxBids, bids.btcValue)}
+                reverse />
+            ))}
           </RowWr>
         </StatsWr>
       </Wr>
