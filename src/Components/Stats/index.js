@@ -78,12 +78,12 @@ export default class Stats extends Component {
             <Label noMargin> price </Label>
             <Separator>
               <Label> BTC </Label>
-              <Label> USD </Label>
+              <Label> ETH </Label>
             </Separator>
           </Wrapper>
           <Wrapper>
             <Separator>
-              <Label> USD </Label>
+              <Label> ETH </Label>
               <Label> BTC </Label>
             </Separator>
             <Label noMargin> price </Label>
